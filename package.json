@@ -4,9 +4,15 @@
   "main": "src/main.js",
   "scripts": {
     "start": "node src/main.js",
-    "dev": "npx nodemon src/main.js"
+    "dev": "NODE_ENV=development npx nodemon src/main.js"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "@types/node": "^24.0.15",
+    "fastify": "^5.4.0",
+    "fastify-type-provider-zod": "^5.0.2",
+    "pino-pretty": "^13.0.0"
   }
 }

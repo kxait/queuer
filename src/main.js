@@ -1,1 +1,37 @@
-console.log('hello world');
+import fastify from 'fastify';
+import {
+  serializerCompiler,
+  validatorCompiler,
+} from 'fastify-type-provider-zod';
+import process from 'node:process';
+
+const port = process.env.PORT ? parseInt(process.env.PORT) : 3001;
+
+const envToLogger = {
+  development: {
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'HH:MM:ss Z',
+      },
+    },
+    production: true,
+  },
+};
+
+const fa = fastify({
+  logger: envToLogger[process.env.NODE_ENV] ?? true,
+  requestIdHeader: 'x-trace-id',
+});
+
+fa.setSerializerCompiler(serializerCompiler);
+fa.setValidatorCompiler(validatorCompiler);
+
+fa.listen({ port, host: '0.0.0.0' }, (err, address) => {
+  if (err) {
+    fa.log.error(err);
+    process.exit(1);
+  }
+  console.log(`Server listening on ${address}`);
+});
