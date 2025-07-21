@@ -42,7 +42,13 @@ export async function pub(topic, msg) {
 
   if (!succeeded) {
     queue.messages.push(msg);
+    console.debug(
+      `message ${msg.metadata.id} was not delivered to topic ${topic} due to no listeners`,
+    );
+    return;
   }
+
+  console.debug(`published message ${msg.metadata.id} to topic ${topic}`);
 }
 
 /**
@@ -63,6 +69,9 @@ async function deliver(queue, msg) {
   const listener = queue.listeners[queue.pointer++];
   try {
     await listener.cb(msg);
+    console.debug(
+      `message ${msg.metadata.id} was delivered to listener id ${listener.id}`,
+    );
   } catch (e) {
     console.error(
       `delivery of message ${msg.metadata.id} to listener id ${listener.id} resulted in exception caught, this message will not be redelivered`,
@@ -102,6 +111,8 @@ export function sub(topic, cb) {
   const id = Math.random().toString(36).slice(2);
   queue.listeners.push({ id, cb });
 
+  console.debug(`subscribed to topic ${topic} with listener id ${id}`);
+
   /**
    * if this is the first listener, deliver all messages
    *
@@ -127,6 +138,7 @@ export function unsub(topic, id) {
     );
   }
 
+  console.debug(`unsubscribed from topic ${topic} with listener id ${id}`);
   queue.listeners = queue.listeners.filter((listener) => listener.id !== id);
 }
 
