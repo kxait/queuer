@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": true,
+    "module": "es2022",
+    "target": "es2022",
+    "moduleResolution": "node",
+    "lib": [
+      "es2024"
+    ]
+  }
+}

@@ -4,7 +4,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
-import process from 'node:process';
+import * as process from 'node:process';
 import {
   postPubBodySchema,
   postPubHandler,
