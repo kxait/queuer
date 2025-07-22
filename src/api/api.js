@@ -159,7 +159,7 @@ class QueuerClient {
       return;
     }
 
-    const data = res.json();
+    const data = await res.json();
     const parsed = z
       .object({
         messages: z.number(),
