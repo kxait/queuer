@@ -150,10 +150,15 @@ class QueuerClient {
   }
 
   /**
-   * @returns {Promise<import('../queue/queue.js').QueueInfo & { subscribed: boolean }>}
+   * @returns {Promise<(import('../queue/queue.js').QueueInfo & { subscribed: boolean }) | undefined>} undefined if the topic does not exist
    */
   async info() {
     const res = await fetch(`${this.#baseUrl}/info/${this.#topic}`);
+
+    if (res.status === 404) {
+      return;
+    }
+
     const data = res.json();
     const parsed = z
       .object({

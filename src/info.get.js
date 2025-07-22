@@ -16,5 +16,11 @@ export async function getInfoHandler(req, res) {
   const { topic } = await getInfoSchema.parseAsync(req.params);
 
   const inf = info(topic);
+
+  if (!inf) {
+    res.status(404).send();
+    return;
+  }
+
   return res.send(inf);
 }
