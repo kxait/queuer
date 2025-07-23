@@ -27,9 +27,11 @@ class QueuerClient {
 
   /**
    * @param {any} data
+   * @param {Object} [options]
+   * @param {boolean} [options.fanOut]
    * @returns {Promise<{ id: string, timestamp: Date }>}
    */
-  async pub(data) {
+  async pub(data, options) {
     const body = (() => {
       if (typeof data === 'object') {
         return JSON.stringify(data);
@@ -42,7 +44,10 @@ class QueuerClient {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ data: body }),
+      body: JSON.stringify({
+        data: body,
+        ...(options?.fanOut === true ? { fanOut: true } : {}),
+      }),
     });
 
     const json = await response.json();

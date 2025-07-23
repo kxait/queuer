@@ -4,6 +4,7 @@ import z from 'zod';
 
 export const postPubBodySchema = z.object({
   data: z.string(),
+  fanOut: z.boolean().optional(),
 });
 
 export const postPubParamsSchema = z.object({
@@ -24,13 +25,14 @@ export async function postPubHandler(req, res) {
   const timestamp = new Date();
 
   const { topic } = await postPubParamsSchema.parseAsync(req.params);
-  const { data } = await postPubBodySchema.parseAsync(req.body);
+  const { data, fanOut } = await postPubBodySchema.parseAsync(req.body);
 
   await pub(topic, {
     data,
     metadata: {
       id,
       enqueuedAt: timestamp,
+      fanOut: fanOut ?? false,
     },
   });
 

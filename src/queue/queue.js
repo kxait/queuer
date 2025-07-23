@@ -2,6 +2,7 @@
  * @typedef {Object} _QueueMessageMetadataProps
  * @property {Date} enqueuedAt
  * @property {string} id
+ * @property {boolean} fanOut
  *
  * @typedef {_QueueMessageMetadataProps & { [key: string]: any }} QueueMessageMetadata
  *
@@ -60,6 +61,26 @@ export async function pub(topic, msg) {
 async function deliver(queue, msg) {
   if (queue.listeners.length === 0) {
     return false;
+  }
+
+  if (msg.metadata.fanOut) {
+    const promises = queue.listeners.map(async (listener) => {
+      try {
+        await listener.cb(msg);
+        console.debug(
+          `message ${msg.metadata.id} with fanOut was delivered to listener id ${listener.id}`,
+        );
+      } catch (e) {
+        console.error(
+          `delivery of message ${msg.metadata.id} with fanOut to listener id ${listener.id} resulted in exception caught, this message will not be redelivered`,
+          e,
+        );
+      }
+    });
+
+    await Promise.all(promises);
+
+    return true;
   }
 
   if (queue.pointer >= queue.listeners.length) {
