@@ -5,6 +5,7 @@
 export function postPubHandler(req: import("fastify").FastifyRequest, res: import("fastify").FastifyReply): Promise<never>;
 export const postPubBodySchema: z.ZodObject<{
     data: z.ZodString;
+    fanOut: z.ZodOptional<z.ZodBoolean>;
 }, z.core.$strip>;
 export const postPubParamsSchema: z.ZodObject<{
     topic: z.ZodString;

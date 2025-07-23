@@ -39,6 +39,7 @@ export type QueueInfo = {
 export type _QueueMessageMetadataProps = {
     enqueuedAt: Date;
     id: string;
+    fanOut: boolean;
 };
 export type QueueMessageMetadata = _QueueMessageMetadataProps & {
     [key: string]: any;
